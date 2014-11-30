@@ -1,4 +1,5 @@
 FROM centos:centos6
+MAINTAINER tidnlyam@gmail.com
 
 RUN adduser tily
 
