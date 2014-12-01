@@ -22,6 +22,7 @@ RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/libevent.conf && ldconfig
 ## tmux
 RUN cd /usr/local/src && curl -LO http://downloads.sourceforge.net/tmux/tmux-1.9a.tar.gz
 RUN cd /usr/local/src && tar -xvf tmux-1.9a.tar.gz && cd tmux-1.9a && ./configure && make && make install
+ADD dot.tmux.conf /home/tily/.tmux.conf
 
 ## eclipse
 RUN cd /usr/local/src && curl -LO http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/luna/SR1/eclipse-java-luna-SR1-linux-gtk-x86_64.tar.gz
