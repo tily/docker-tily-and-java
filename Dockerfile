@@ -56,7 +56,7 @@ RUN sudo -u tily cd /home/tily/.gradle && unzip /usr/local/src/gradle-2.2.1-bin.
 RUN sudo -u tily ln -s gradle-2.2.1-bin gradle
 RUN sudo -u tily echo export PATH=$PATH:~/.gradle/gradle/bin
 
-## vim: neobundle
+## vim: neobundle & nerdtree
 RUN sudo -u tily curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
 ADD dot.vimrc /home/tily/.vimrc
 RUN sudo -u tily vim -u ~/.vimrc -i NONE -c "try | NeoBundleUpdate! | finally | q! | endtry" -e -s -V1
