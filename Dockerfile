@@ -38,7 +38,7 @@ RUN yum install -y libXfont
 RUN mkdir -p /opt/eclim
 RUN cd /opt/eclim && curl -LO http://jaist.dl.sourceforge.net/project/eclim/eclim/2.3.4/eclim_2.3.4.jar
 RUN sed -i -e 's/\s*Defaults\s*requiretty$/#Defaults    requiretty/' /etc/sudoers
-RUN sudo -u tily java -Dvim.files=/home/tily/.vim -Declipse.home=/opt/eclipse -jar /opt/eclim/eclim_2.3.4.jar install
+RUN java -Dvim.files=/home/tily/.vim -Declipse.home=/opt/eclipse -jar /opt/eclim/eclim_2.3.4.jar install
 RUN sudo -u tily Xvfb :1 -screen 0 1024x768x24 &
 RUN sudo -u tily DISPLAY=:1 /opt/eclipse/eclimd &
 
