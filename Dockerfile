@@ -52,11 +52,34 @@ RUN yum install -y typesafe-stack
 ## gradle
 RUN cd /usr/local/src && curl -LO https://services.gradle.org/distributions/gradle-2.2.1-bin.zip
 RUN sudo -u tily mkdir /home/tily/.gradle
-RUN sudo -u tily cd /home/tily/.gradle && unzip /usr/local/src/gradle-2.2.1-bin.zip
-RUN sudo -u tily ln -s gradle-2.2.1-bin gradle
-RUN sudo -u tily echo export PATH=$PATH:~/.gradle/gradle/bin
+RUN sudo -u tily bash -c "cd /home/tily/.gradle && unzip /usr/local/src/gradle-2.2.1-bin.zip"
+RUN sudo -u tily bash -c "cd /home/tily/.gradle && ln -s gradle-2.2.1 gradle"
+RUN sudo -u tily bash -c "echo export PATH=$PATH:~/.gradle/gradle/bin >> /home/tily/.bashrc"
 
 ## vim: neobundle & nerdtree
-RUN sudo -u tily curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
+RUN chown -R tily:tily /home/tily/.vim
+RUN sudo -u tily bash -c "curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh"
 ADD dot.vimrc /home/tily/.vimrc
-RUN sudo -u tily vim -u ~/.vimrc -i NONE -c "try | NeoBundleUpdate! | finally | q! | endtry" -e -s -V1
+RUN sudo -u tily bash -c 'vim -u /home/tily/.vimrc -i NONE -c "try | NeoBundleUpdate! | finally | q! | endtry" -e -s -V1' || echo 0
+
+## mysql server
+RUN yum install -y http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm
+RUN yum install -y mysql mysql-devel mysql-server mysql-utilities
+
+## ssh server
+RUN yum install -y openssh-server
+
+## supervisor
+RUN rpm -ivh http://ftp.riken.jp/Linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+RUN yum install -y supervisor
+ADD supervisord.conf /etc/supervisord.conf
+
+RUN sed -ri 's/^#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -ri 's/^UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+RUN echo 'root:java' | chpasswd
+RUN echo 'tily:java' | chpasswd
+RUN /usr/bin/ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -C '' -N ''
+RUN /usr/bin/ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -C '' -N ''
+
+EXPOSE 22
+CMD /usr/bin/supervisord -n
