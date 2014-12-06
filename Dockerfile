@@ -1,4 +1,3 @@
-
 FROM centos:centos6
 MAINTAINER tidnlyam@gmail.com
 

@@ -1,20 +1,26 @@
+# dockerfile for tily and java
 
-* ユーザー
-  * tily (eclim が root で実行できないため)
-* アプリケーション
-  * git
-  * java
-  * vim
-    * nerdtree
-  * eclim (+ eclipse)
-  * gradle
-  * tmux
-  * scala
-  * mysqld (手動立ち上げ)
-  * sshd
-* TODO
-  * supervisord 経由で xvfb, eclim 立ち上げ
-  * supervisord 経由で mysqld 立ち上げ
-  * supervisord + ssh 廃止、nsenter 導入
+## what's installed
 
+* git
+* tmux
+* java (open jdk 1.6 & 1.7)
+* vim (with nerdtree & eclim)
+* gradle
+* scala (sbt)
+* mysqld (5.6)
 
+## how to use
+
+* in host
+```
+$ docker pull tily/tily-and-java
+$ docker run -ti tily/tily-and-java bash
+```
+* in container
+```
+# su tily
+## start up eclim
+$ Xvfb :1 -screen 0 1024x768x24 &
+$ DISPLAY=:1 /opt/eclipse/eclimd &
+```
